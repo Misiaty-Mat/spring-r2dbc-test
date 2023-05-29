@@ -1,23 +1,28 @@
 package com.spring.mateusz.spring6reactive.bootstrap;
 
 import com.spring.mateusz.spring6reactive.domain.Beer;
+import com.spring.mateusz.spring6reactive.domain.Customer;
 import com.spring.mateusz.spring6reactive.repositories.BeerRepository;
+import com.spring.mateusz.spring6reactive.repositories.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 
 @Component
 @RequiredArgsConstructor
 public class BootstrapData implements CommandLineRunner {
 
     private final BeerRepository beerRepository;
+    private final CustomerRepository customerRepository;
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         loadBeerData();
+        loadCustomerData();
         beerRepository.count().subscribe(count -> {
             System.out.println("Count of beers: " + count);
         });
@@ -61,6 +66,36 @@ public class BootstrapData implements CommandLineRunner {
             beerRepository.save(beer1).subscribe();
             beerRepository.save(beer2).subscribe();
             beerRepository.save(beer3).subscribe();
+        });
+    }
+
+    private void loadCustomerData() {
+        customerRepository.count().subscribe(count -> {
+            if (count != 0) {
+                return;
+            }
+
+            Customer customer1 = Customer.builder()
+                    .name("Mateusz")
+                    .createdDate(LocalDateTime.now())
+                    .lastModifiedDate(LocalDateTime.now())
+                    .build();
+
+            Customer customer2 = Customer.builder()
+                    .name("Pateusz")
+                    .createdDate(LocalDateTime.now())
+                    .lastModifiedDate(LocalDateTime.now())
+                    .build();
+
+            Customer customer3 = Customer.builder()
+                    .name("Vateusz")
+                    .createdDate(LocalDateTime.now())
+                    .lastModifiedDate(LocalDateTime.now())
+                    .build();
+
+            customerRepository.save(customer1).subscribe();
+            customerRepository.save(customer2).subscribe();
+            customerRepository.save(customer3).subscribe();
         });
     }
 }

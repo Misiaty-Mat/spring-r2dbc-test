@@ -1,5 +1,7 @@
 package com.spring.mateusz.spring6reactive.repositories;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spring.mateusz.spring6reactive.config.DatabaseConfig;
 import com.spring.mateusz.spring6reactive.domain.Beer;
 import org.junit.jupiter.api.Test;
@@ -13,10 +15,17 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DataR2dbcTest
 @Import(DatabaseConfig.class)
-class BeerRepositoryTest {
+public class BeerRepositoryTest {
 
     @Autowired
     BeerRepository beerRepository;
+
+    @Test
+    void testCreateJson() throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        System.out.println(objectMapper.writeValueAsString(getTestBeer()));
+    }
 
     @Test
     void testSaveNewBeer() {
@@ -26,7 +35,7 @@ class BeerRepositoryTest {
                 });
     }
 
-    Beer getTestBeer() {
+    public static Beer getTestBeer() {
         return Beer.builder()
                 .beerName("Grass Hopper")
                 .beerStyle("ALE")
